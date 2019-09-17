@@ -44,7 +44,7 @@ module.exports = {
 			const connection = await getConnection("*")
 			const query = util.promisify(connection.query).bind(connection)
 			const res = await query(sql, values)
-			console.log(res)
+
 			connection.release()
 
 			const end = new Date()
