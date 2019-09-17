@@ -10,15 +10,13 @@ module.exports = {
 				)
 			}
 			const videos = await ctx.db.query(
-				`
-					select trc.videos.*, trc.publishers.name as publisher 
-					from trc.videos 
-					inner join trc.publishers 
-					on trc.publishers.id = trc.videos.publisher_id 
-					where publisher_id = ? 
-					order by create_time desc 
-					limit 30
-				`,
+				`select trc.videos.*, trc.publishers.name as publisher 
+				from trc.videos 
+				inner join trc.publishers 
+				on trc.publishers.id = trc.videos.publisher_id 
+				where publisher_id = ? 
+				order by create_time desc 
+				limit 30`,
 				[args.publisher_id]
 			)
 
