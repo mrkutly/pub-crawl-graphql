@@ -38,7 +38,7 @@ module.exports = {
 	query: async (sql, values) => {
 		try {
 			const start = new Date();
-            
+
 			values = values || undefined;
 			const connection = await getConnection('*');
 			const query = util.promisify(connection.query).bind(connection);

@@ -1,0 +1,55 @@
+type Video {
+	publisher: String
+	id: String
+	publisher_id: Int
+	pub_video_id: String
+	uploader: String
+	title: String
+	description: String
+	url: String
+	thumbnail_url: String
+	publish_date: String
+	is_recommendable: Boolean
+	is_manual_recommendable: Boolean
+	external_data: String
+	item_type: String
+	has_expired: Boolean
+	was_crawled: Boolean
+	update_time: String
+	start_date: String
+	create_time: String
+	crawlerAuditData: CrawlerAuditData
+	crawlerInstructionsData: CrawlerInstructionsData
+}
+
+type CrawlerAuditData {
+	id: String
+	publisher: String
+	pub_item_id: String
+	item_type: String
+	first_successful_processing: String
+	last_successful_processing: String
+	last_upload: String
+	error_message: String
+	nonrecommendable_reason: String
+	source: String
+	last_crawl_reason: String
+	first_nonrecommendable_time: String
+}
+
+type CrawlerInstructionsData {
+	id: String
+	lock_id: String
+	lock_time: String
+	num_strikes: Int
+	last_strike_date: String
+	next_crawl: String
+	next_crawl_reason: Int
+}
+
+type Query {
+	videos(publisher_id: Int, publisher_name: String): [Video]
+	crawlerAuditData: [CrawlerAuditData]
+}
+
+# Channel
