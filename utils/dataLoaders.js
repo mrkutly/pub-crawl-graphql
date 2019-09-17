@@ -42,8 +42,9 @@ const makeDataLoaders = (pubName, publisherId) => {
 					FROM trc.video_channels
 					INNER JOIN trc.publisher_channels 
 					ON trc.video_channels.channel_id = trc.publisher_channels.id
-					WHERE trc.video_channels.video_id IN (${placeholders});`,
-					ids
+					WHERE trc.publisher_channels.publisher_id = ?
+					AND trc.video_channels.video_id IN (${placeholders})`,
+					[publisherId, ...ids]
 				)
 
 				return ids.map(id =>
