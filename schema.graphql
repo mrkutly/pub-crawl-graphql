@@ -20,6 +20,14 @@ type Video {
 	create_time: String
 	crawlerAuditData: CrawlerAuditData
 	crawlerInstructionsData: CrawlerInstructionsData
+	channelData: Channel
+}
+
+type Channel {
+	id: Int
+	publisher_id: Int
+	parent_channel: Channel
+	channel: String
 }
 
 type CrawlerAuditData {
@@ -47,9 +55,19 @@ type CrawlerInstructionsData {
 	next_crawl_reason: Int
 }
 
+type Publisher {
+	id: Int
+	name: String
+	description: String
+}
+
 type Query {
 	videos(publisher_id: Int, publisher_name: String): [Video]
-	crawlerAuditData: [CrawlerAuditData]
+	publishers(
+		publisher_id: Int
+		publisher_name: String
+		publisher_description: String
+	): [Publisher]
 }
 
 # Channel

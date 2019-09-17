@@ -1,20 +1,20 @@
 {
-  "name": "inno-graphql",
-  "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
-  "scripts": {
-    "dev": "nodemon --inspect index.js"
-  },
-  "dependencies": {
-    "apollo-server": "^2.9.3",
-    "dataloader": "^1.4.0",
-    "dotenv": "^8.1.0",
-    "graphql": "^14.5.6",
-    "graphql-import": "^0.7.1",
-    "mysql": "^2.17.1"
-  },
-  "devDependencies": {
-    "nodemon": "^1.19.2"
-  }
+	"name": "inno-graphql",
+	"version": "1.0.0",
+	"main": "index.js",
+	"license": "MIT",
+	"scripts": {
+		"dev": "nodemon -e js,json,graphql --inspect index.js"
+	},
+	"dependencies": {
+		"apollo-server": "^2.9.3",
+		"dataloader": "^1.4.0",
+		"dotenv": "^8.1.0",
+		"graphql": "^14.5.6",
+		"graphql-import": "^0.7.1",
+		"mysql": "^2.17.1"
+	},
+	"devDependencies": {
+		"nodemon": "^1.19.2"
+	}
 }
