@@ -3,7 +3,7 @@ const mysql = require("mysql")
 const util = require("util")
 
 const poolConfig = {
-	connectionLimit: 20,
+	connectionLimit: 10,
 	user: process.env.CRAWLER_DB_USERNAME,
 	host: process.env.CRAWLER_DB_HOST,
 	database: process.env.CRAWLER_DB_DATABASE,
@@ -28,8 +28,28 @@ cluster.add(poolConfig)
 cluster.add(poolConfig)
 cluster.add(poolConfig)
 cluster.add(poolConfig)
+cluster.add(poolConfig)
+cluster.add(poolConfig)
+cluster.add(poolConfig)
+cluster.add(poolConfig)
+cluster.add(poolConfig)
 
 const getConnection = util.promisify(cluster.getConnection).bind(cluster)
+
+async function recursiveQuery(query, sql, values) {
+	try {
+		let res = await query(sql, values)
+
+		if (res.fatal) {
+			console.log("disconnected. trying again...")
+			res = recursiveQuery(sql, values)
+		}
+
+		return res
+	} catch (error) {
+		return error
+	}
+}
 
 module.exports = {
 	/**
@@ -43,7 +63,7 @@ module.exports = {
 			values = values || undefined
 			const connection = await getConnection("*")
 			const query = util.promisify(connection.query).bind(connection)
-			const res = await query(sql, values)
+			const res = recursiveQuery(query, sql, values)
 
 			connection.release()
 

@@ -12,6 +12,7 @@ const makeDataLoaders = (pubName, publisherId) => {
 					AND crawler.audit.pub_item_id IN (${placeholders})`,
 					[pubName, ...ids]
 				)
+
 				return ids.map(id => auditData.find(audit => audit.pub_item_id === id))
 			} catch (error) {
 				return error
@@ -34,7 +35,7 @@ const makeDataLoaders = (pubName, publisherId) => {
 				return error
 			}
 		}),
-		channel: new DataLoader(async ids => {
+		channels: new DataLoader(async ids => {
 			try {
 				const placeholders = ids.map(id => "?").join()
 				const videoChannels = await db.query(
@@ -48,7 +49,7 @@ const makeDataLoaders = (pubName, publisherId) => {
 				)
 
 				return ids.map(id =>
-					videoChannels.find(channel => channel.video_id === id)
+					videoChannels.filter(channel => channel.video_id === id)
 				)
 			} catch (error) {
 				return error

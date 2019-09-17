@@ -22,7 +22,7 @@ type Video {
 	create_time: DateTime
 	crawlerAuditData: CrawlerAuditData
 	crawlerInstructionsData: CrawlerInstructionsData
-	channelData: Channel
+	channelsData: [Channel]
 }
 
 type Channel {
