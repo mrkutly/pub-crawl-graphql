@@ -10,13 +10,13 @@ module.exports = {
 				)
 			}
 			const videos = await ctx.db.query(
-				`select trc.videos.*, trc.publishers.name as publisher 
-				from trc.videos 
-				inner join trc.publishers 
-				on trc.publishers.id = trc.videos.publisher_id 
-				where publisher_id = ? 
-				order by create_time desc 
-				limit 30`,
+				`SELECT trc.videos.*, trc.publishers.name as publisher 
+				FROM trc.videos 
+				INNER JOIN trc.publishers 
+				ON trc.publishers.id = trc.videos.publisher_id 
+				WHERE publisher_id = ? 
+				ORDER BY create_time DESC
+				LIMIT 50`,
 				[args.publisher_id]
 			)
 
@@ -34,9 +34,10 @@ module.exports = {
 				)
 			}
 			const [video] = await ctx.db.query(
-				`select *
-				from trc.videos 
-				where publisher_id = ? and id = ?`,
+				`SELECT *
+				FROM trc.videos 
+				WHERE publisher_id = ? 
+				AND id = ?`,
 				[args.publisher_id, args.video_id]
 			)
 
@@ -55,9 +56,9 @@ module.exports = {
 				)
 			}
 			const videos = await ctx.db.query(
-				`select *
-				from trc.videos 
-				where publisher_id = ? and url rlike ?`,
+				`SELECT *
+				FROM trc.videos 
+				WHERE publisher_id = ? AND url RLIKE ?`,
 				[args.publisher_id, args.video_url]
 			)
 
@@ -71,18 +72,18 @@ module.exports = {
 		try {
 			if (args.publisher_name) {
 				return await ctx.db.query(
-					`select * from trc.publishers where name rlike ?`,
+					`SELECT * FROM trc.publishers WHERE name RLIKE ?`,
 					[args.publisher_name]
 				)
 			}
 			if (args.publisher_id) {
-				return await ctx.db.query(`select * from trc.publishers where id = ?`, [
+				return await ctx.db.query(`SELECT * FROM trc.publishers WHERE id = ?`, [
 					args.publisher_id
 				])
 			}
 			if (args.publisher_description) {
 				return await ctx.db.query(
-					`select * from trc.publishers where description rlike ?`,
+					`SELECT * FROM trc.publishers WHERE description RLIKE ?`,
 					[args.publisher_description]
 				)
 			}

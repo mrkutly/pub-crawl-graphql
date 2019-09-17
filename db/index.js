@@ -3,7 +3,7 @@ const mysql = require("mysql")
 const util = require("util")
 
 const poolConfig = {
-	connectionLimit: 10,
+	connectionLimit: 20,
 	user: process.env.CRAWLER_DB_USERNAME,
 	host: process.env.CRAWLER_DB_HOST,
 	database: process.env.CRAWLER_DB_DATABASE,
@@ -44,7 +44,7 @@ module.exports = {
 			const connection = await getConnection("*")
 			const query = util.promisify(connection.query).bind(connection)
 			const res = await query(sql, values)
-
+			console.log(res)
 			connection.release()
 
 			const end = new Date()

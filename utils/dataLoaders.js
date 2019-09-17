@@ -7,7 +7,9 @@ const makeDataLoaders = (pubName, publisherId) => {
 			try {
 				const placeholders = ids.map(id => "?").join()
 				const auditData = await db.query(
-					`select * from crawler.audit where crawler.audit.publisher = ? and crawler.audit.pub_item_id in (${placeholders})`,
+					`SELECT * FROM crawler.audit 
+					WHERE crawler.audit.publisher = ? 
+					AND crawler.audit.pub_item_id IN (${placeholders})`,
 					[pubName, ...ids]
 				)
 				return ids.map(id => auditData.find(audit => audit.pub_item_id === id))
@@ -19,7 +21,9 @@ const makeDataLoaders = (pubName, publisherId) => {
 			try {
 				const placeholders = ids.map(id => "?").join()
 				const instructionsData = await db.query(
-					`select * from crawler.instructions where crawler.instructions.publisher = ? and crawler.instructions.pub_item_id in (${placeholders})`,
+					`SELECT * FROM crawler.instructions 
+					WHERE crawler.instructions.publisher = ? 
+					AND crawler.instructions.pub_item_id IN (${placeholders})`,
 					[pubName, ...ids]
 				)
 
@@ -34,13 +38,11 @@ const makeDataLoaders = (pubName, publisherId) => {
 			try {
 				const placeholders = ids.map(id => "?").join()
 				const videoChannels = await db.query(
-					`
-						select trc.publisher_channels.*, trc.video_channels.* 
-						from trc.video_channels
-						inner join trc.publisher_channels 
-						on trc.video_channels.channel_id = trc.publisher_channels.id
-						where trc.video_channels.video_id in (${placeholders});
-					`,
+					`SELECT trc.publisher_channels.*, trc.video_channels.* 
+					FROM trc.video_channels
+					INNER JOIN trc.publisher_channels 
+					ON trc.video_channels.channel_id = trc.publisher_channels.id
+					WHERE trc.video_channels.video_id IN (${placeholders});`,
 					ids
 				)
 
