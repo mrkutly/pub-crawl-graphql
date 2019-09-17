@@ -1,7 +1,7 @@
 type Video {
 	publisher: String
-	id: String
-	publisher_id: Int
+	id: ID!
+	publisher_id: ID!
 	pub_video_id: String
 	uploader: String
 	title: String
@@ -24,14 +24,14 @@ type Video {
 }
 
 type Channel {
-	id: Int
+	id: ID!
 	publisher_id: Int
 	parent_channel: Channel
 	channel: String
 }
 
 type CrawlerAuditData {
-	id: String
+	id: ID!
 	publisher: String
 	pub_item_id: String
 	item_type: String
@@ -46,7 +46,7 @@ type CrawlerAuditData {
 }
 
 type CrawlerInstructionsData {
-	id: String
+	id: ID!
 	lock_id: String
 	lock_time: String
 	num_strikes: Int
@@ -56,13 +56,23 @@ type CrawlerInstructionsData {
 }
 
 type Publisher {
-	id: Int
+	id: ID!
 	name: String
 	description: String
 }
 
 type Query {
-	videos(publisher_id: Int, publisher_name: String): [Video]
+	videos(publisher_id: Int!, publisher_name: String!): [Video]
+	videoWhereId(
+		video_id: String!
+		publisher_id: Int!
+		publisher_name: String!
+	): Video
+	videosWhereUrl(
+		video_url: String!
+		publisher_id: Int!
+		publisher_name: String!
+	): [Video]
 	publishers(
 		publisher_id: Int
 		publisher_name: String
