@@ -1,7 +1,5 @@
 const makeDataLoaders = require("../utils/dataLoaders")
 
-// TODO: pagination!
-
 module.exports = {
 	videos: async (parent, args, ctx, info) => {
 		try {
