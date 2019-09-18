@@ -13,43 +13,19 @@ const poolConfig = {
 }
 
 const clusterConfig = {
-	restoreNodeTimeout: 20
+	removeNodeErrorCount: 1,
+	restoreNodeTimeout: 0,
+	canRetry: true
 }
 
 const cluster = mysql.createPoolCluster(clusterConfig)
 
-cluster.add(poolConfig)
-cluster.add(poolConfig)
-cluster.add(poolConfig)
-cluster.add(poolConfig)
-cluster.add(poolConfig)
-cluster.add(poolConfig)
-cluster.add(poolConfig)
-cluster.add(poolConfig)
-cluster.add(poolConfig)
-cluster.add(poolConfig)
-cluster.add(poolConfig)
-cluster.add(poolConfig)
-cluster.add(poolConfig)
-cluster.add(poolConfig)
-cluster.add(poolConfig)
+cluster.on("remove", function(nodeId) {
+	console.log("REMOVED NODE : " + nodeId) // nodeId = SLAVE1
+})
+;[...Array(10)].forEach(el => cluster.add(poolConfig))
 
 const getConnection = util.promisify(cluster.getConnection).bind(cluster)
-
-async function recursiveQuery(query, sql, values) {
-	try {
-		let res = await query(sql, values)
-
-		if (res.fatal) {
-			console.log("disconnected. trying again...")
-			res = recursiveQuery(sql, values)
-		}
-
-		return res
-	} catch (error) {
-		return error
-	}
-}
 
 module.exports = {
 	/**
@@ -58,20 +34,21 @@ module.exports = {
 	 */
 	query: async (sql, values) => {
 		try {
-			const start = new Date()
-
 			values = values || undefined
 			const connection = await getConnection("*")
+
 			const query = util.promisify(connection.query).bind(connection)
-			const res = recursiveQuery(query, sql, values)
+			const res = await query(sql, values)
 
 			connection.release()
 
-			const end = new Date()
-			console.log(`Query Time - ${end - start}`)
 			return res
 		} catch (error) {
 			return error
 		}
+	},
+
+	end: () => {
+		cluster.end()
 	}
 }

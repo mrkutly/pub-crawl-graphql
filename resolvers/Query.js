@@ -1,5 +1,7 @@
 const makeDataLoaders = require("../utils/dataLoaders")
 
+// TODO: pagination!
+
 module.exports = {
 	videos: async (parent, args, ctx, info) => {
 		try {
@@ -9,6 +11,9 @@ module.exports = {
 					args.publisher_id
 				)
 			}
+
+			const page = args.page - 1 || 0
+			const skip = page * 50
 			const videos = await ctx.db.query(
 				`SELECT trc.videos.*, trc.publishers.name as publisher 
 				FROM trc.videos 
@@ -16,8 +21,9 @@ module.exports = {
 				ON trc.publishers.id = trc.videos.publisher_id 
 				WHERE publisher_id = ? 
 				ORDER BY create_time DESC
-				LIMIT 50`,
-				[args.publisher_id]
+				LIMIT 50
+				OFFSET ?`,
+				[args.publisher_id, skip]
 			)
 
 			return videos

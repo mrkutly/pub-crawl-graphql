@@ -66,7 +66,7 @@ type Publisher {
 }
 
 type Query {
-	videos(publisher_id: Int!, publisher_name: String!): [Video]
+	videos(publisher_id: Int!, publisher_name: String!, page: Int): [Video]
 	videoWhereId(
 		video_id: String!
 		publisher_id: Int!
