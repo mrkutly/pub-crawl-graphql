@@ -65,8 +65,28 @@ type Publisher {
 	description: String
 }
 
+type PageInfo {
+	hasNextPage: Boolean!
+	totalPages: Int!
+}
+
+type AllVideosType {
+	pageInfo: PageInfo!
+	edges: [Video]!
+}
+
+enum OrderType {
+	DESC
+	ASC
+}
+
 type Query {
-	videos(publisher_id: Int!, publisher_name: String!, page: Int): [Video]
+	allVideos(
+		publisher_id: Int!
+		publisher_name: String!
+		page: Int
+		order: OrderType
+	): AllVideosType
 	videoWhereId(
 		video_id: String!
 		publisher_id: Int!
@@ -83,5 +103,3 @@ type Query {
 		publisher_description: String
 	): [Publisher]
 }
-
-# Channel

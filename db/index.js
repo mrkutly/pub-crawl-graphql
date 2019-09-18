@@ -20,10 +20,7 @@ const clusterConfig = {
 
 const cluster = mysql.createPoolCluster(clusterConfig)
 
-cluster.on("remove", function(nodeId) {
-	console.log("REMOVED NODE : " + nodeId) // nodeId = SLAVE1
-})
-;[...Array(10)].forEach(el => cluster.add(poolConfig))
+;[...Array(20)].forEach(el => cluster.add(poolConfig))
 
 const getConnection = util.promisify(cluster.getConnection).bind(cluster)
 
@@ -34,6 +31,7 @@ module.exports = {
 	 */
 	query: async (sql, values) => {
 		try {
+			const start = new Date()
 			values = values || undefined
 			const connection = await getConnection("*")
 
@@ -41,7 +39,8 @@ module.exports = {
 			const res = await query(sql, values)
 
 			connection.release()
-
+			const end = new Date()
+			console.log(`Time - ${end - start}`)
 			return res
 		} catch (error) {
 			return error

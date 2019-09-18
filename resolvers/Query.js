@@ -1,7 +1,13 @@
 const makeDataLoaders = require("../utils/dataLoaders")
+const PageCountsCache = require("../utils/PageCountsCache")
+const VideosCache = require("../utils/VideosCache")
+const { perPage } = require("../config")
+
+const pageCountsCache = new PageCountsCache()
+const videosCache = new VideosCache()
 
 module.exports = {
-	videos: async (parent, args, ctx, info) => {
+	allVideos: async (parent, args, ctx, info) => {
 		try {
 			if (!ctx.videoLoader) {
 				ctx.videoLoader = makeDataLoaders(
@@ -10,21 +16,19 @@ module.exports = {
 				)
 			}
 
-			const page = args.page - 1 || 0
-			const skip = page * 50
-			const videos = await ctx.db.query(
-				`SELECT trc.videos.*, trc.publishers.name as publisher 
-				FROM trc.videos 
-				INNER JOIN trc.publishers 
-				ON trc.publishers.id = trc.videos.publisher_id 
-				WHERE publisher_id = ? 
-				ORDER BY create_time DESC
-				LIMIT 50
-				OFFSET ?`,
-				[args.publisher_id, skip]
-			)
+			const videos = await videosCache.getVideos(args)
 
-			return videos
+			const totalPages = await pageCountsCache.getCount(args.publisher_id)
+			const page = args.page || 1
+			const hasNextPage = totalPages !== page
+
+			return {
+				edges: videos,
+				pageInfo: {
+					hasNextPage,
+					totalPages
+				}
+			}
 		} catch (error) {
 			return error
 		}
